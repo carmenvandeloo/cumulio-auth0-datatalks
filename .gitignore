@@ -1,0 +1,12 @@
+# Node artifact files
+node_modules
+dist/
+
+# .env files
+.env
+
+# Log files
+*.log
+
+auth_config.json
+*.zip
