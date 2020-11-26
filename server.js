@@ -29,14 +29,24 @@ const client = new Cumulio({
 app.get('/authorization', checkJwt, (req, res) => {
   const authNamespace = 'https://myexampleapp/';
   // Fill general authorization options, dashboard_id based on request
+  let options = {
+    type: 'temporary',
+    expiry: '1 day',
+    inactivity_interval: '10 minutes',
+    securables: [req.query.id]
+  };
 
   // Fill parameters based on parameters of user known at auth0
 
   // Fill user metadata of user known at auth0
 
   // Create the temporary authorization
-
-  return res.status(200).json({});
+  client.create('authorization', options)
+    .then(function (result) {
+      // return the temp token & key
+      return res.status(200).json(result);
+    })
+    .catch(e => {console.log(JSON.stringify(e, null, 2))});
 });
 
 // retrieve list of dashboards from Cumul.io with the tag "auth0"
