@@ -42,8 +42,31 @@ app.get('/authorization', checkJwt, (req, res) => {
 // retrieve list of dashboards from Cumul.io with the tag "auth0"
 app.get('/dashboards', checkJwt, (req, res) => {
   // retrieve all dashboards with certain tag from Cumul.io
-
-  return res.status(200).json({});
+  const tag = "auth0";
+  client.get('securable', {
+    "where": {
+      "type": "dashboard"
+     },
+     "options": {
+         "public": false
+     },
+     "attributes": ["id", "name"],
+     "include": [
+       {
+         "model": "Tag",
+         "where": {
+           "tag": tag
+         },
+         "jointype": "inner",
+         "attributes": ["id", "tag"]
+       }
+     ]
+  })
+  .then(function (result) {
+    // return list of dashboard id's and their name
+    return res.status(200).json(result.rows);
+  })
+  .catch(e => {console.log(JSON.stringify(e, null, 2))});
 });
 
 // Serve static assets from the /public folder
