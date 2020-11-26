@@ -45,6 +45,11 @@ app.get('/authorization', checkJwt, (req, res) => {
   };
 
   // Fill user metadata of user known at auth0
+  if (req.user && req.user[authNamespace + 'name'] && req.user[authNamespace + 'email'] ) {
+    options.username = req.user[authNamespace + 'name'];
+    options.name = req.user[authNamespace + 'name'];
+    options.email = req.user[authNamespace + 'email'];
+  };
 
   // Create the temporary authorization
   client.create('authorization', options)
