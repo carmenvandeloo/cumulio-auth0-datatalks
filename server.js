@@ -37,6 +37,12 @@ app.get('/authorization', checkJwt, (req, res) => {
   };
 
   // Fill parameters based on parameters of user known at auth0
+  if (req.user && req.user[authNamespace + 'parameters']) {
+    if(!options.metadata) options.metadata = {};
+    Object.keys(req.user[authNamespace + 'parameters']).forEach(parameter => {
+      options.metadata[parameter] = req.user[authNamespace + 'parameters'][parameter];
+    })
+  };
 
   // Fill user metadata of user known at auth0
 
