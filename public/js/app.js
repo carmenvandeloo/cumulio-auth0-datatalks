@@ -126,20 +126,33 @@ const getDashboardAuthorizationToken = async (dashboard_id, parameter) => {
 // Function to add the dashboard to the page using Cumul.io embed
 const loadDashboard = async (dashboard_id, key, token, container) => {
   // remove the currently integrated dashboard
-
+  Cumulio.removeDashboard({container: '#dashboard-container'});
   // Set generic dashboard loading options
-
+  let dashboardOptions = {
+    container: '#dashboard-container',
+    loader: {
+      spinnerColor: '#004CB7',
+      spinnerBackground: '#DCDCDC',
+      fontColor: '#FFFFFF'
+    }
+  };
   // override the container in which to integrate the dashboard, if provided
-
+  if(container) {
+    dashboardOptions.container = container;
+  }
   // use tokens if available
-
+  if (key && token) {
+    dashboardOptions.key = key;
+    dashboardOptions.token = token;
+  }
   // set the language of the dashboard based on the user language
-
+  if (userLanguage) dashboardOptions.language = userLanguage;
   // the dashboardId of the dashboard to be integrated
-
+  dashboardOptions.dashboardId = dashboard_id;
   // log the entire call to add the dashboard to the container, then execute it
-
-}
+  console.log(JSON.stringify(dashboardOptions, null, 2));
+  Cumulio.addDashboard(dashboardOptions);
+};
 
 window.addEventListener('message', e => {
   if (e.data && e.data.type === 'init') {
